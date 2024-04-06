@@ -1,4 +1,4 @@
-package br.com.alura.adopet.api;
+package br.com.vinnilmg.adopet.api;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

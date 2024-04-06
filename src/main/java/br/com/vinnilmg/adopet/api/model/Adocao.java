@@ -1,4 +1,4 @@
-package br.com.alura.adopet.api.model;
+package br.com.vinnilmg.adopet.api.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;

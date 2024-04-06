@@ -1,8 +1,8 @@
-package br.com.alura.adopet.api.controller;
+package br.com.vinnilmg.adopet.api.controller;
 
-import br.com.alura.adopet.api.model.Abrigo;
-import br.com.alura.adopet.api.model.Pet;
-import br.com.alura.adopet.api.repository.AbrigoRepository;
+import br.com.vinnilmg.adopet.api.model.Abrigo;
+import br.com.vinnilmg.adopet.api.model.Pet;
+import br.com.vinnilmg.adopet.api.repository.AbrigoRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
