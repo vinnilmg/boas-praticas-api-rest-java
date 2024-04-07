@@ -1,4 +1,4 @@
-package br.com.vinnilmg.adopet.api.dto;
+package br.com.vinnilmg.adopet.api.dto.adocao.request;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

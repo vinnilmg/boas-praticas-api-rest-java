@@ -1,8 +1,8 @@
 package br.com.vinnilmg.adopet.api.controller;
 
-import br.com.vinnilmg.adopet.api.dto.AprovacaoAdocaoDto;
-import br.com.vinnilmg.adopet.api.dto.ReprovacaoAdocaoDto;
-import br.com.vinnilmg.adopet.api.dto.SolicitacaoAdocaoDto;
+import br.com.vinnilmg.adopet.api.dto.adocao.request.AprovacaoAdocaoDto;
+import br.com.vinnilmg.adopet.api.dto.adocao.request.ReprovacaoAdocaoDto;
+import br.com.vinnilmg.adopet.api.dto.adocao.request.SolicitacaoAdocaoDto;
 import br.com.vinnilmg.adopet.api.service.AdocaoService;
 import jakarta.validation.Valid;
 import jakarta.validation.ValidationException;
@@ -42,5 +42,4 @@ public class AdocaoController {
         this.adocaoService.reprovar(dto);
         return ResponseEntity.ok().build();
     }
-
 }

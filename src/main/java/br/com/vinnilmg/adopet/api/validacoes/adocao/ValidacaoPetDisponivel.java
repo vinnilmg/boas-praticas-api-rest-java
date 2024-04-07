@@ -1,6 +1,6 @@
-package br.com.vinnilmg.adopet.api.validacoes;
+package br.com.vinnilmg.adopet.api.validacoes.adocao;
 
-import br.com.vinnilmg.adopet.api.dto.SolicitacaoAdocaoDto;
+import br.com.vinnilmg.adopet.api.dto.adocao.request.SolicitacaoAdocaoDto;
 import br.com.vinnilmg.adopet.api.exception.ValidacaoException;
 import br.com.vinnilmg.adopet.api.model.Pet;
 import br.com.vinnilmg.adopet.api.repository.PetRepository;

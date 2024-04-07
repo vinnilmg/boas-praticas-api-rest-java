@@ -1,15 +1,15 @@
 package br.com.vinnilmg.adopet.api.service;
 
-import br.com.vinnilmg.adopet.api.dto.AprovacaoAdocaoDto;
-import br.com.vinnilmg.adopet.api.dto.ReprovacaoAdocaoDto;
-import br.com.vinnilmg.adopet.api.dto.SolicitacaoAdocaoDto;
+import br.com.vinnilmg.adopet.api.dto.adocao.request.AprovacaoAdocaoDto;
+import br.com.vinnilmg.adopet.api.dto.adocao.request.ReprovacaoAdocaoDto;
+import br.com.vinnilmg.adopet.api.dto.adocao.request.SolicitacaoAdocaoDto;
 import br.com.vinnilmg.adopet.api.model.Adocao;
 import br.com.vinnilmg.adopet.api.model.Pet;
 import br.com.vinnilmg.adopet.api.model.Tutor;
 import br.com.vinnilmg.adopet.api.repository.AdocaoRepository;
 import br.com.vinnilmg.adopet.api.repository.PetRepository;
 import br.com.vinnilmg.adopet.api.repository.TutorRepository;
-import br.com.vinnilmg.adopet.api.validacoes.ValidacaoSolicitacaoAdocao;
+import br.com.vinnilmg.adopet.api.validacoes.adocao.ValidacaoSolicitacaoAdocao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
