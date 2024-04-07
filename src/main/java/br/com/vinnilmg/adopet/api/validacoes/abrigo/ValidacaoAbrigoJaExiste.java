@@ -4,7 +4,9 @@ import br.com.vinnilmg.adopet.api.dto.abrigo.request.CadastroAbrigoDto;
 import br.com.vinnilmg.adopet.api.exception.ValidacaoException;
 import br.com.vinnilmg.adopet.api.repository.AbrigoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component
 public class ValidacaoAbrigoJaExiste implements ValidacaoCadastroAbrigo {
     @Autowired
     private AbrigoRepository repository;
