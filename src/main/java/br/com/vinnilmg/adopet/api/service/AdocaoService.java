@@ -1,9 +1,16 @@
 package br.com.vinnilmg.adopet.api.service;
 
+import br.com.vinnilmg.adopet.api.dto.AprovacaoAdocaoDto;
+import br.com.vinnilmg.adopet.api.dto.ReprovacaoAdocaoDto;
+import br.com.vinnilmg.adopet.api.dto.SolicitacaoAdocaoDto;
 import br.com.vinnilmg.adopet.api.exception.ValidacaoException;
 import br.com.vinnilmg.adopet.api.model.Adocao;
+import br.com.vinnilmg.adopet.api.model.Pet;
 import br.com.vinnilmg.adopet.api.model.StatusAdocao;
+import br.com.vinnilmg.adopet.api.model.Tutor;
 import br.com.vinnilmg.adopet.api.repository.AdocaoRepository;
+import br.com.vinnilmg.adopet.api.repository.PetRepository;
+import br.com.vinnilmg.adopet.api.repository.TutorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,29 +22,38 @@ import java.util.List;
 public class AdocaoService {
 
     @Autowired
-    private AdocaoRepository repository;
+    private AdocaoRepository adocaoRepository;
+
+    @Autowired
+    private PetRepository petRepository;
+
+    @Autowired
+    private TutorRepository tutorRepository;
 
     @Autowired
     private EmailService emailService;
 
-    public void solicitar(Adocao adocao) {
-        if (adocao.getPet().getAdotado() == true) {
+    public void solicitar(SolicitacaoAdocaoDto dto) {
+        Pet pet = petRepository.getReferenceById(dto.idPet());
+        Tutor tutor = tutorRepository.getReferenceById(dto.idTutor());
+
+        if (pet.getAdotado() == true) {
             throw new ValidacaoException("Pet já foi adotado!");
         } else {
-            List<Adocao> adocoes = repository.findAll();
+            List<Adocao> adocoes = adocaoRepository.findAll();
             for (Adocao a : adocoes) {
-                if (a.getTutor() == adocao.getTutor() && a.getStatus() == StatusAdocao.AGUARDANDO_AVALIACAO) {
+                if (a.getTutor() == tutor && a.getStatus() == StatusAdocao.AGUARDANDO_AVALIACAO) {
                     throw new ValidacaoException("Tutor já possui outra adoção aguardando avaliação!");
                 }
             }
             for (Adocao a : adocoes) {
-                if (a.getPet() == adocao.getPet() && a.getStatus() == StatusAdocao.AGUARDANDO_AVALIACAO) {
+                if (a.getPet() == pet && a.getStatus() == StatusAdocao.AGUARDANDO_AVALIACAO) {
                     throw new ValidacaoException("Pet já está aguardando avaliação para ser adotado!");
                 }
             }
             for (Adocao a : adocoes) {
                 int contador = 0;
-                if (a.getTutor() == adocao.getTutor() && a.getStatus() == StatusAdocao.APROVADO) {
+                if (a.getTutor() == tutor && a.getStatus() == StatusAdocao.APROVADO) {
                     contador = contador + 1;
                 }
                 if (contador == 5) {
@@ -45,9 +61,15 @@ public class AdocaoService {
                 }
             }
         }
+
+        Adocao adocao = new Adocao();
         adocao.setData(LocalDateTime.now());
         adocao.setStatus(StatusAdocao.AGUARDANDO_AVALIACAO);
-        repository.save(adocao);
+        adocao.setPet(pet);
+        adocao.setTutor(tutor);
+        adocao.setMotivo(dto.motivo());
+
+        adocaoRepository.save(adocao);
 
         emailService.enviarEmail(
                 adocao.getPet().getAbrigo().getEmail(),
@@ -55,9 +77,9 @@ public class AdocaoService {
                 "Olá " + adocao.getPet().getAbrigo().getNome() + "!\n\nUma solicitação de adoção foi registrada hoje para o pet: " + adocao.getPet().getNome() + ". \nFavor avaliar para aprovação ou reprovação.");
     }
 
-    public void aprovar(Adocao adocao) {
+    public void aprovar(AprovacaoAdocaoDto dto) {
+        Adocao adocao = adocaoRepository.getReferenceById(dto.idAdocao());
         adocao.setStatus(StatusAdocao.APROVADO);
-        repository.save(adocao);
 
         emailService.enviarEmail(
                 adocao.getTutor().getEmail(),
@@ -65,9 +87,10 @@ public class AdocaoService {
                 "Parabéns " + adocao.getTutor().getNome() + "!\n\nSua adoção do pet " + adocao.getPet().getNome() + ", solicitada em " + adocao.getData().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")) + ", foi aprovada.\nFavor entrar em contato com o abrigo " + adocao.getPet().getAbrigo().getNome() + " para agendar a busca do seu pet.");
     }
 
-    public void reprovar(Adocao adocao) {
+    public void reprovar(ReprovacaoAdocaoDto dto) {
+        Adocao adocao = adocaoRepository.getReferenceById(dto.idAdocao());
         adocao.setStatus(StatusAdocao.REPROVADO);
-        repository.save(adocao);
+        adocao.setJustificativaStatus(dto.justificativa());
 
         emailService.enviarEmail(
                 adocao.getTutor().getEmail(),
