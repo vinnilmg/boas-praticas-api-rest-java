@@ -5,7 +5,6 @@ import br.com.vinnilmg.adopet.api.dto.ReprovacaoAdocaoDto;
 import br.com.vinnilmg.adopet.api.dto.SolicitacaoAdocaoDto;
 import br.com.vinnilmg.adopet.api.model.Adocao;
 import br.com.vinnilmg.adopet.api.model.Pet;
-import br.com.vinnilmg.adopet.api.model.StatusAdocao;
 import br.com.vinnilmg.adopet.api.model.Tutor;
 import br.com.vinnilmg.adopet.api.repository.AdocaoRepository;
 import br.com.vinnilmg.adopet.api.repository.PetRepository;
@@ -14,7 +13,6 @@ import br.com.vinnilmg.adopet.api.validacoes.ValidacaoSolicitacaoAdocao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
@@ -43,13 +41,7 @@ public class AdocaoService {
         // Realiza todas as validações
         validacoes.forEach(v -> v.validar(dto));
 
-        Adocao adocao = new Adocao();
-        adocao.setData(LocalDateTime.now());
-        adocao.setStatus(StatusAdocao.AGUARDANDO_AVALIACAO);
-        adocao.setPet(pet);
-        adocao.setTutor(tutor);
-        adocao.setMotivo(dto.motivo());
-
+        Adocao adocao = new Adocao(tutor, pet, dto.motivo());
         adocaoRepository.save(adocao);
 
         emailService.enviarEmail(
@@ -60,7 +52,7 @@ public class AdocaoService {
 
     public void aprovar(AprovacaoAdocaoDto dto) {
         Adocao adocao = adocaoRepository.getReferenceById(dto.idAdocao());
-        adocao.setStatus(StatusAdocao.APROVADO);
+        adocao.aprovarAdocao();
 
         emailService.enviarEmail(
                 adocao.getTutor().getEmail(),
@@ -70,8 +62,7 @@ public class AdocaoService {
 
     public void reprovar(ReprovacaoAdocaoDto dto) {
         Adocao adocao = adocaoRepository.getReferenceById(dto.idAdocao());
-        adocao.setStatus(StatusAdocao.REPROVADO);
-        adocao.setJustificativaStatus(dto.justificativa());
+        adocao.reprovarAdocao(dto.justificativa());
 
         emailService.enviarEmail(
                 adocao.getTutor().getEmail(),
